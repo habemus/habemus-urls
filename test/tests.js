@@ -72,6 +72,14 @@ describe('h-urls', function () {
       });
     });
 
+    it('prod: parse should return nulls upon a url that does not match the pattern', function () {
+
+      var parsed = prodURLs.parse.workspacePreview('http://google.com');
+      parsed.should.eql({
+        projectCode: null
+      });
+    });
+
   });
 
   describe('format.websiteHabemusDomain(projectCode, null), parse.websiteHabemusDomain("my-project.habemus.website")', function () {
@@ -135,7 +143,7 @@ describe('h-urls', function () {
 
   describe('parse.websiteHabemusDomain(projectCode, versionCode, formatOptions)', function () {
     it('dev: should allow parsing only the domain', function () {
-      devURLs.parse.websiteHabemusDomain('v1.my-project.habemus.website')
+      devURLs.parse.websiteHabemusDomain('v1.my-project.habemus.website', { domainOnly: true })
         .should.eql({
           projectCode: 'my-project',
           versionCode: 'v1',

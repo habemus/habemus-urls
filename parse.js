@@ -22,13 +22,13 @@ exports.workspace = function (options, srcURL) {
     throw new Error('srcURL is required');
   }
 
-  var projectCode = aux.trimPrefix(
-    aux.ensureHTTP(aux.trimTrailingSlash(options.workspaceHost)) + '/workspace/',
-    aux.ensureHTTP(srcURL)
+  var match = aux.matchPrefix(
+    aux.trimHTTP(aux.trimTrailingSlash(options.workspaceHost)) + '/workspace/',
+    aux.trimHTTP(srcURL)
   );
 
   return {
-    projectCode: projectCode,
+    projectCode: match ? match[1] : null,
   };
 };
 
@@ -45,13 +45,13 @@ exports.workspacePreview = function (options, srcURL) {
     throw new Error('workspacePreviewHost is required');
   }
 
-  var projectCode = aux.trimSuffix(
+  var match = aux.matchSuffix(
     '.' + aux.trimHTTP(aux.trimTrailingSlash(options.workspacePreviewHost)),
     aux.trimHTTP(aux.trimTrailingSlash(srcURL))
   );
 
   return {
-    projectCode: projectCode
+    projectCode: match ? match[1] : null
   };
 };
 
@@ -78,27 +78,34 @@ exports.websiteHabemusDomain = function (options, srcURL) {
 
   // retrieve the string that has the versionCode and projectCode
   // candidates
-  var dataString = aux.trimSuffix(
+  var match = aux.matchSuffix(
     '.' + aux.trimHTTP(aux.trimTrailingSlash(options.websiteHost)),
     aux.trimHTTP(aux.trimTrailingSlash(srcURL))
   );
 
-  var split = dataString.split('.');
+  var dataString = match ? match[1] : null;
 
-  if (split.length === 2) {
-    // version and project
-    versionCode = split[0];
-    projectCode = split[1];
-
-  } else if (split.length === 1) {
-    // project only
-    versionCode = null;
-    projectCode = split[0];
-    
-  } else {
-    // does not match anything
-    versionCode = null;
+  if (!dataString) {
     projectCode = null;
+    versionCode = null;
+  } else {
+    var split = dataString.split('.');
+
+    if (split.length === 2) {
+      // version and project
+      versionCode = split[0];
+      projectCode = split[1];
+
+    } else if (split.length === 1) {
+      // project only
+      versionCode = null;
+      projectCode = split[0];
+
+    } else {
+      // does not match anything
+      versionCode = null;
+      projectCode = null;
+    }
   }
 
   return {
@@ -106,14 +113,3 @@ exports.websiteHabemusDomain = function (options, srcURL) {
     versionCode: versionCode,
   };
 };
-
-// exports.websiteCustomDomain = function (options, domain, formatOptions) {
-
-//   if (!domain) {
-//     throw new Error('domain is required');
-//   }
-
-//   formatOptions = formatOptions || {};
-
-//   return formatOptions.domainOnly ? aux.trimHTTP(domain) : aux.ensureHTTP(domain);
-// };

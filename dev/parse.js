@@ -39,12 +39,12 @@ exports.workspacePreview = function (options, srcURL) {
     throw new Error('hWorkspaceServerURI is required');
   }
 
-  var projectCode = aux.trimPrefix(
-    aux.ensureHTTP(aux.trimTrailingSlash(options.hWorkspaceServerURI)) + '/workspace/',
-    aux.ensureHTTP(srcURL)
+  var match = aux.matchPrefix(
+    aux.trimHTTP(aux.trimTrailingSlash(options.hWorkspaceServerURI)) + '/workspace/',
+    aux.trimHTTP(srcURL)
   );
 
-  projectCode = aux.trimTrailingSlash(projectCode);
+  projectCode = match ? aux.trimTrailingSlash(match[1]) : null;
 
   return {
     projectCode: projectCode,
@@ -61,7 +61,7 @@ exports.workspacePreview = function (options, srcURL) {
  * @param  {String} srcURL
  * @return {String}
  */
-exports.websiteHabemusDomain = function (options, srcURL) {
+exports.websiteHabemusDomain = function (options, srcURL, parseOptions) {
   if (!options.hWebsiteServerURI) {
     throw new Error('hWebsiteServerURI is required');
   }
@@ -70,21 +70,28 @@ exports.websiteHabemusDomain = function (options, srcURL) {
     throw new Error('srcURL is required');
   }
 
-  var domain = aux.trimPrefix(
-    aux.ensureHTTP(aux.trimTrailingSlash(options.hWebsiteServerURI)) + '/website/',
-    aux.ensureHTTP(aux.trimTrailingSlash(srcURL))
-  );
+  parseOptions = parseOptions || {};
+  var domainOnly = parseOptions.domainOnly || false;
 
-  return prodParse.websiteHabemusDomain(options, domain);
+  if (domainOnly) {
+    return prodParse.websiteHabemusDomain(options, srcURL);
+
+  } else {
+
+    var match = aux.matchPrefix(
+      aux.trimHTTP(aux.trimTrailingSlash(options.hWebsiteServerURI)) + '/website/',
+      aux.trimHTTP(aux.trimTrailingSlash(srcURL))
+    );
+
+    var domain = match ? match[1] : null;
+
+    if (!domain) {
+      return {
+        projectCode: null,
+        versionCode: null,
+      };
+    } else {
+      return prodParse.websiteHabemusDomain(options, domain);
+    }
+  }
 };
-
-// exports.websiteCustomDomain = function (options, domain, formatOptions) {
-
-//   if (!domain) {
-//     throw new Error('domain is required');
-//   }
-
-//   formatOptions = formatOptions || {};
-
-//   return formatOptions.domainOnly ? aux.trimHTTP(domain) : aux.ensureHTTP(domain);
-// };
