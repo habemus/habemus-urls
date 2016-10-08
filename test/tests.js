@@ -21,7 +21,7 @@ describe('h-urls', function () {
       websiteHost: 'habemus.website',
 
       // required only for dev urls
-      hWorkspaceUIServerURI: 'http://localhost:3000',
+      uiWorkspaceURI: 'http://localhost:3000',
       hWorkspaceServerURI: 'http://localhost:9000/api/h-workspace-server/public',
       hWebsiteServerURI: 'http://localhost:9000/api/h-website-server/public',
     });
@@ -39,7 +39,7 @@ describe('h-urls', function () {
       });
     });
 
-    it('dev: http://{{ hWorkspaceUIServerURI }}?code={{ projectCode }}', function () {
+    it('dev: http://{{ uiWorkspaceURI }}?code={{ projectCode }}', function () {
       var resURL = devURLs.format.workspace('my-project');
       resURL.should.eql('http://localhost:3000?code=my-project');
 

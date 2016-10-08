@@ -31,16 +31,16 @@ exports.workspacePreview = function (options, projectCode) {
  * Formats the url for accessing the workspace of a given projectCode
  * 
  * @param  {Object} options
- *         - hWorkspaceUIServerURI
+ *         - uiWorkspaceURI
  * @param  {Object} projectCode
  * @return {String}
  */
 exports.workspace = function (options, projectCode) {
-  if (!options.hWorkspaceUIServerURI) {
-    throw new Error('hWorkspaceUIServerURI is required');
+  if (!options.uiWorkspaceURI) {
+    throw new Error('uiWorkspaceURI is required');
   }
 
-  return aux.trimTrailingSlash(options.hWorkspaceUIServerURI) + '?code=' + projectCode;
+  return aux.trimTrailingSlash(options.uiWorkspaceURI) + '?code=' + projectCode;
 };
 
 /**
