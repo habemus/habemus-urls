@@ -23,6 +23,22 @@ exports.ensureHTTP = function (str) {
   return HTTP_PROTOCOL_RE.test(str) ? str : 'http://' + str;
 };
 
+exports.prefixRegExp = function (str) {
+  return new RegExp('^' + str);
+};
+
+exports.trimPrefix = function (prefix, str) {
+  return str.replace(exports.prefixRegExp(prefix), '');
+};
+
+exports.suffixRegExp = function (str) {
+  return new RegExp(str + '$');
+};
+
+exports.trimSuffix = function (suffix, str) {
+  return str.replace(exports.suffixRegExp(suffix), '');
+};
+
 exports.curryAll = function (obj, options) {
 
   var res = {};
