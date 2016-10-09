@@ -62,14 +62,18 @@ describe('h-urls', function () {
       });
     });
 
-    it('dev: http://{{ hWorkspaceServerURI }}/workspace/{{ projectCode }}', function () {
+    it('dev: http://{{ hWorkspaceServerURI }}/workspace/{{ projectCode }}.{{ workspacePreviewHost }}', function () {
       var resURL = devURLs.format.workspacePreview('my-project');
-      resURL.should.eql('http://localhost:9000/api/h-workspace-server/public/workspace/my-project');
+      resURL.should.eql('http://localhost:9000/api/h-workspace-server/public/workspace/my-project.habemus.io');
 
-      var parsed = devURLs.parse.workspacePreview(resURL);
-      parsed.should.eql({
+      devURLs.parse.workspacePreview(resURL).should.eql({
         projectCode: 'my-project'
       });
+
+      // add some complexity
+      devURLs.parse.workspacePreview(resURL + '/index.html').should.eql({
+        projectCode: 'my-project'
+      })
     });
 
     it('prod: parse should return nulls upon a url that does not match the pattern', function () {

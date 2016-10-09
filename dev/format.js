@@ -10,6 +10,7 @@ const prodFmt = require('../format');
  * 
  * @param  {Object} options
  *         - hWorkspaceServerURI
+ *         - workspacePreviewHost
  * @param  {String} projectCode
  * @return {String}
  */
@@ -24,7 +25,9 @@ exports.workspacePreview = function (options, projectCode) {
 
   hWorkspaceServerURI = aux.trimTrailingSlash(options.hWorkspaceServerURI);
 
-  return hWorkspaceServerURI + '/workspace/' + projectCode;
+  var domain = aux.trimHTTP(prodFmt.workspacePreview(options, projectCode));
+
+  return hWorkspaceServerURI + '/workspace/' + domain;
 };
 
 /**

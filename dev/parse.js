@@ -39,16 +39,22 @@ exports.workspacePreview = function (options, srcURL) {
     throw new Error('hWorkspaceServerURI is required');
   }
 
-  var match = aux.matchPrefix(
+  var prefixMatchRes = aux.matchPrefix(
     aux.trimHTTP(aux.trimTrailingSlash(options.hWorkspaceServerURI)) + '/workspace/',
     aux.trimHTTP(srcURL)
   );
 
-  projectCode = match ? aux.trimTrailingSlash(match[1]) : null;
+  if (!prefixMatchRes) {
+    return {
+      projectCode: null
+    };
+  } else {
+    var matchRes = aux.trimTrailingSlash(prefixMatchRes[1]);
+    // domain is always the first part
+    var domain = matchRes.split('/')[0];
 
-  return {
-    projectCode: projectCode,
-  };
+    return prodParse.workspacePreview(options, domain);
+  }
 };
 
 
