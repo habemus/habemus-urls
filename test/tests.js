@@ -11,39 +11,38 @@ describe('h-urls', function () {
   beforeEach(function () {
     prodURLs = urls({
       workspacePreviewHost: 'habemus.io',
-      workspaceHost: 'habem.us',
       websiteHost: 'habemus.website',
+      uiWorkspaceBaseURL: 'http://habem.us',
     });
 
     devURLs = urlsDev({
       workspacePreviewHost: 'habemus.io',
-      workspaceHost: 'habem.us',
       websiteHost: 'habemus.website',
+      uiWorkspaceBaseURL: 'http://localhost:3000',
 
       // required only for dev urls
-      uiWorkspaceURI: 'http://localhost:3000',
       hWorkspaceServerURI: 'http://localhost:9000/api/h-workspace-server/public',
       hWebsiteServerURI: 'http://localhost:9000/api/h-website-server/public',
     });
   });
 
-  describe('format.workspace(projectCode), parse.workspace(srcURL)', function () {
-    it('prod: http://{{ workspaceHost }}/workspaces/{{ projectCode }}', function () {
+  describe('format.uiWorkspace(projectCode), parse.uiWorkspace(srcURL)', function () {
+    it('prod: http://{{ uiWorkspaceBaseURL }}/workspaces/{{ projectCode }}', function () {
 
-      var resURL = prodURLs.format.workspace('my-project');
+      var resURL = prodURLs.format.uiWorkspace('my-project');
       resURL.should.eql('http://habem.us/workspace/my-project');
 
-      var parsed = prodURLs.parse.workspace(resURL);
+      var parsed = prodURLs.parse.uiWorkspace(resURL);
       parsed.should.eql({
         projectCode: 'my-project',
       });
     });
 
     it('dev: http://{{ uiWorkspaceURI }}?code={{ projectCode }}', function () {
-      var resURL = devURLs.format.workspace('my-project');
+      var resURL = devURLs.format.uiWorkspace('my-project');
       resURL.should.eql('http://localhost:3000?code=my-project');
 
-      var parsed = devURLs.parse.workspace(resURL);
+      var parsed = devURLs.parse.uiWorkspace(resURL);
       parsed.should.eql({
         projectCode: 'my-project',
       });
@@ -55,6 +54,16 @@ describe('h-urls', function () {
     it('prod: http://{{ projectCode }}.{{ workspacePreviewHost }}', function () {
       var resURL = prodURLs.format.workspacePreview('my-project');
       resURL.should.eql('http://my-project.habemus.io');
+
+      var parsed = prodURLs.parse.workspacePreview(resURL);
+      parsed.should.eql({
+        projectCode: 'my-project',
+      });
+    });
+
+    it('prod: http://{{ projectCode }}.{{ workspacePreviewHost }}/somedir/somefile.html', function () {
+      var resURL = prodURLs.format.workspacePreview('my-project') + '/somedir/somefile.html';
+      resURL.should.eql('http://my-project.habemus.io/somedir/somefile.html');
 
       var parsed = prodURLs.parse.workspacePreview(resURL);
       parsed.should.eql({

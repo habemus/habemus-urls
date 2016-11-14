@@ -9,23 +9,31 @@ const aux = require('./aux');
  * Formats the url for accessing the workspace of a given projectCode
  * 
  * @param  {Object} options
- *         - workspaceHost
+ *         - uiWorkspaceBaseURL
  * @param  {Object} projectCode
  * @return {String}
  */
-exports.workspace = function (options, projectCode) {
-  if (!options.workspaceHost) {
-    throw new Error('workspaceHost is required');
+exports.uiWorkspace = function (options, projectCode) {
+
+  /**
+   * TODO: modify to `uiWorkspaceBaseURL` or something else.
+   */
+  if (!options.uiWorkspaceBaseURL) {
+    throw new Error('uiWorkspaceBaseURL is required');
   }
 
   if (!projectCode) {
     throw new Error('projectCode is required');
   }
 
-  var res = aux.trimTrailingSlash(options.workspaceHost);
+  var res = aux.trimTrailingSlash(options.uiWorkspaceBaseURL);
   res = aux.ensureHTTP(res);
 
   return res + '/workspace/' + projectCode;
+};
+
+exports.uiDashboard = function (options) {
+  throw new Error('not implemented');
 };
 
 /**

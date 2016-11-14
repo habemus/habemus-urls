@@ -9,13 +9,13 @@ const aux = require('./aux');
  * Parses the projectCode out of a given url
  * 
  * @param  {Object} options
- *         - workspaceHost
+ *         - uiWorkspaceBaseURL
  * @param  {String} srcURL
  * @return {Object}
  */
-exports.workspace = function (options, srcURL) {
-  if (!options.workspaceHost) {
-    throw new Error('workspaceHost is required');
+exports.uiWorkspace = function (options, srcURL) {
+  if (!options.uiWorkspaceBaseURL) {
+    throw new Error('uiWorkspaceBaseURL is required');
   }
 
   if (!srcURL) {
@@ -23,7 +23,7 @@ exports.workspace = function (options, srcURL) {
   }
 
   var match = aux.matchPrefix(
-    aux.trimHTTP(aux.trimTrailingSlash(options.workspaceHost)) + '/workspace/',
+    aux.trimHTTP(aux.trimTrailingSlash(options.uiWorkspaceBaseURL)) + '/workspace/',
     aux.trimHTTP(srcURL)
   );
 
@@ -45,9 +45,15 @@ exports.workspacePreview = function (options, srcURL) {
     throw new Error('workspacePreviewHost is required');
   }
 
+  // ensure srcURL has http://
+  srcURL = aux.ensureHTTP(srcURL);
+
+  // get the hostname for the srcURL
+  var hostname = url.parse(srcURL).hostname;
+
   var match = aux.matchSuffix(
     '.' + aux.trimHTTP(aux.trimTrailingSlash(options.workspacePreviewHost)),
-    aux.trimHTTP(aux.trimTrailingSlash(srcURL))
+    hostname
   );
 
   return {

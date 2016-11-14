@@ -6,6 +6,26 @@ const aux     = require('../aux');
 const prodFmt = require('../format');
 
 /**
+ * Formats the url for accessing the workspace of a given projectCode
+ * 
+ * @param  {Object} options
+ *         - uiWorkspaceBaseURL
+ * @param  {Object} projectCode
+ * @return {String}
+ */
+exports.uiWorkspace = function (options, projectCode) {
+  if (!options.uiWorkspaceBaseURL) {
+    throw new Error('uiWorkspaceBaseURL is required');
+  }
+
+  return aux.trimTrailingSlash(options.uiWorkspaceBaseURL) + '?code=' + projectCode;
+};
+
+exports.uiDashboard = function (options) {
+  throw new Error('not implemented');
+};
+
+/**
  * Formats the url for previewing a workspace's files.
  * 
  * @param  {Object} options
@@ -28,22 +48,6 @@ exports.workspacePreview = function (options, projectCode) {
   var domain = aux.trimHTTP(prodFmt.workspacePreview(options, projectCode));
 
   return hWorkspaceServerURI + '/workspace/' + domain;
-};
-
-/**
- * Formats the url for accessing the workspace of a given projectCode
- * 
- * @param  {Object} options
- *         - uiWorkspaceURI
- * @param  {Object} projectCode
- * @return {String}
- */
-exports.workspace = function (options, projectCode) {
-  if (!options.uiWorkspaceURI) {
-    throw new Error('uiWorkspaceURI is required');
-  }
-
-  return aux.trimTrailingSlash(options.uiWorkspaceURI) + '?code=' + projectCode;
 };
 
 /**

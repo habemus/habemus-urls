@@ -14,7 +14,7 @@ const prodParse = require('../parse');
  * @param  {String} srcURL
  * @return {String}
  */
-exports.workspace = function (options, srcURL) {
+exports.uiWorkspace = function (options, srcURL) {
   if (!srcURL) {
     throw new Error('srcURL is required');
   }
