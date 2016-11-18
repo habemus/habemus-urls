@@ -22,6 +22,12 @@ exports.uiWorkspace = function (options, srcURL) {
     throw new Error('srcURL is required');
   }
 
+  // clear the query string
+  var parsed = url.parse(srcURL);
+  delete parsed.query;
+  delete parsed.search;
+  srcURL = url.format(parsed);
+
   var match = aux.matchPrefix(
     aux.trimHTTP(aux.trimTrailingSlash(options.uiWorkspaceBaseURL)) + '/workspace/',
     aux.trimHTTP(srcURL)

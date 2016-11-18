@@ -36,6 +36,13 @@ describe('h-urls', function () {
       parsed.should.eql({
         projectCode: 'my-project',
       });
+
+      var resURL1 = prodURLs.format.uiWorkspace('my-project');
+      resURL += '?lang=en-US';
+      var parsed1 = prodURLs.parse.uiWorkspace(resURL);
+      parsed1.should.eql({
+        projectCode: 'my-project',
+      });
     });
 
     it('dev: http://{{ uiWorkspaceURI }}?code={{ projectCode }}', function () {
