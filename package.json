@@ -1,6 +1,6 @@
 {
-  "name": "h-urls",
-  "version": "0.0.0",
+  "name": "habemus-urls",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
